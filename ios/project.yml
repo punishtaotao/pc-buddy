@@ -1,0 +1,64 @@
+# XcodeGen 工程描述文件。
+# 有 XcodeGen 的话：在本目录执行 `xcodegen generate` 就会生成 PCBuddy.xcodeproj
+# 没有的话，照 README-iOS.md 里的「手动建工程」步骤做，效果一样。
+
+name: PCBuddy
+
+options:
+  bundleIdPrefix: com.pcbuddy
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+  groupSortPosition: top
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+    CODE_SIGN_STYLE: Automatic
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+
+targets:
+  PCBuddy:
+    type: application
+    platform: iOS
+    sources:
+      - path: PCBuddy
+        excludes:
+          # XcodeGen 会把 info 段生成到这个路径，别让它又被当成资源打包一次
+          - "Info.plist"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.pcbuddy.app
+        PRODUCT_NAME: PCBuddy
+        TARGETED_DEVICE_FAMILY: "1"          # 只做 iPhone
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+    info:
+      path: PCBuddy/Info.plist
+      properties:
+        CFBundleDisplayName: 电脑管家
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UIUserInterfaceStyle: Automatic
+        # 电脑端是局域网明文 HTTP，必须放开 ATS，否则请求会被系统直接掐掉
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoads: true
+          NSAllowsLocalNetworking: true
+        # iOS 14 起访问局域网设备要用户授权，缺了这句会静默连不上
+        NSLocalNetworkUsageDescription: 需要访问本地网络，才能连上你电脑上的「电脑管家」服务。
+        NSCameraUsageDescription: 用于扫描电脑上显示的配对二维码，以及拍照发送给电脑。
+        NSPhotoLibraryUsageDescription: 用于从相册选择照片发送给电脑。
+
+schemes:
+  PCBuddy:
+    build:
+      targets:
+        PCBuddy: all
+    run:
+      config: Debug
+    archive:
+      config: Release

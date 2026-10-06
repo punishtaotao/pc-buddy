@@ -1,0 +1,32 @@
+{
+  "deepseek": {
+    "base_url": "https://api.deepseek.com",
+    "api_key": "",
+    "_api_key说明": "把 DeepSeek 的 API Key 填到上面 api_key 里，形如 sk-xxxxxxxxxxxx。别带引号以外的多余字符。",
+    "model": "deepseek-chat",
+    "_model说明": "也可以用 deepseek-reasoner（更擅长复杂推理，但更慢更贵）",
+    "temperature": 0.2
+  },
+  "vision": {
+    "_说明": "可选。DeepSeek 官方对话模型看不了图片，所以手机发来的照片默认走 Windows 本地 OCR 取字。如果你有支持图片的 OpenAI 兼容模型，在这里填上就能真正看图。",
+    "enabled": false,
+    "base_url": "",
+    "api_key": "",
+    "model": ""
+  },
+  "server": {
+    "host": "0.0.0.0",
+    "port": 8765,
+    "_token说明": "留空即可，第一次运行会自动生成一串随机口令，并把完整的手机访问网址打印出来。",
+    "token": ""
+  },
+  "agent": {
+    "max_steps": 25,
+    "_max_steps说明": "单个任务最多连续执行多少步，防止它自己绕圈。",
+    "confirm_timeout": 120,
+    "_confirm_timeout说明": "危险操作在手机上等你确认的秒数，超时按拒绝处理。",
+    "work_dir": "",
+    "_work_dir说明": "留空则用 D:\\DSH\\pc-buddy\\data\\workspace。写这个目录以外的位置需要手机确认。",
+    "system_extra": ""
+  }
+}
