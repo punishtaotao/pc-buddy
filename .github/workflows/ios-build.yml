@@ -24,14 +24,30 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 选 Xcode
-        run: sudo xcode-select -s /Applications/Xcode.app
+        run: |
+          sudo xcode-select -s /Applications/Xcode.app
+          xcodebuild -version
 
       - name: 安装 XcodeGen
-        run: brew install xcodegen
+        run: |
+          brew install xcodegen
+          xcodegen --version
 
       - name: 生成 Xcode 工程
         working-directory: ios
-        run: xcodegen generate
+        run: |
+          xcodegen generate
+          echo "--- 生成的工程格式 ---"
+          grep -m1 'objectVersion' PCBuddy.xcodeproj/project.pbxproj || true
+          # 兜底：万一 xcodegen 太旧、project.yml 里的 projectFormat 没生效，
+          # 手动把工程格式降到 Xcode 15 能读的版本，否则必报
+          # "future Xcode project file format"。
+          OBJ=$(grep -m1 -oE 'objectVersion = [0-9]+' PCBuddy.xcodeproj/project.pbxproj | grep -oE '[0-9]+' | head -1)
+          if [ -n "$OBJ" ] && [ "$OBJ" -gt 70 ]; then
+            echo "objectVersion=$OBJ 对 Xcode 15 过高，降级到 60"
+            sed -i.bak -E 's|objectVersion = [0-9]+|objectVersion = 60|' PCBuddy.xcodeproj/project.pbxproj
+            grep -m1 'objectVersion' PCBuddy.xcodeproj/project.pbxproj
+          fi
 
       - name: 编译（不签名）
         working-directory: ios

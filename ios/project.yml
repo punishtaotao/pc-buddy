@@ -10,6 +10,10 @@ options:
     iOS: "16.0"
   createIntermediateGroups: true
   groupSortPosition: top
+  # XcodeGen 默认生成 xcode16_0 格式（objectVersion 77），Xcode 15.x 打不开，
+  # 会报 "future Xcode project file format" 并直接编译失败。降到 15.0 格式，
+  # Xcode 15 和 16 都能正常打开。需要 XcodeGen >= 2.45.0。
+  projectFormat: xcode15_0
 
 settings:
   base:
